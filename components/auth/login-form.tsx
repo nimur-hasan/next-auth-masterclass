@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import CardWrapper from "./card-wrapper";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -21,6 +21,8 @@ import FormSuccess from "../form-success";
 import { login } from "@/actions/login";
 
 export default function LoginForm() {
+  const [isPendig, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -30,7 +32,9 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    login(data);
+    startTransition(() => {
+      login(data);
+    })
   };
 
   return (
